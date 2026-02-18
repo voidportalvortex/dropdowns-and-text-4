@@ -4,6 +4,7 @@ import fairyDark from './assets/dark.gif'
 import bgMusic from './assets/78-Sun Room (Alone with Relaxing Tea).mp3'
 import apiMagic from './assets/yoba.wav'
 import typing from './assets/dialogueCharacter.wav'
+import.meta.env.VITE_STOCK_API_KEY
 import './App.css'
 
 function TextInput({ text, setText, aud }) {
