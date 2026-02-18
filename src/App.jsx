@@ -73,6 +73,13 @@ function DropdownComplex({index, setIndex}) {
   )
 }
 
+function Eggs({text}){
+  if (text === 'claire' || text === 'Claire'){
+    return (<p> blud is cute </p>)
+  }
+  return null;  
+}
+
 function IndexToAPI({ lat, setLat, long, setLong, index, stock, setStock, slug, setSlug, aud }) {
   //console.log(index);
   if (index === 1){
@@ -255,6 +262,7 @@ function App() {
       <div className = "box">
         <p> whats her name? </p>
         <TextInput text={text} setText={setText} id = "name" aud = {typingAudio} />
+        <Eggs text={text} />
         <p> how old is she? </p>
         <TextInput text={age} setText={setAge} id = "age" aud = {typingAudio} />
         <p> what does she work as </p>
