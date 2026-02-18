@@ -4,7 +4,6 @@ import fairyDark from './assets/dark.gif'
 import bgMusic from './assets/78-Sun Room (Alone with Relaxing Tea).mp3'
 import apiMagic from './assets/yoba.wav'
 import typing from './assets/dialogueCharacter.wav'
-import.meta.env.VITE_STOCK_API_KEY
 import './App.css'
 
 function TextInput({ text, setText, aud }) {
@@ -41,22 +40,24 @@ function CheckBoxes({ check, setCheck, aud }) {
 function DropdownComplex({index, setIndex}) {
   const [selectedOption, setSelectedOption] = useState('weather');
   const [open, setOpen] = useState(false);
+  const [name, setName] = useState('weather');
   const handleChange = (option) => {
     setSelectedOption(option.value);
     setIndex(option.idx);
+    setName(option.label);
     //console.log(index);
     //console.log(option);
   }
   const options = [
     { value: 'weather', label: 'weather', idx: 0 },
-    { value: 'stock', label: 'stocks', idx: 1 },
+    { value: 'city', label: 'pokemon', idx: 1 },
     { value: 'gambling', label: 'gambling', idx: 2 },
   ];
 
   return(
     <div className = "dropdown">
       <div onClick = {() => setOpen(!open)}>
-        i am a fairy of {selectedOption} <span> {open ? '▲' : '▼'} </span>
+        i am a fairy of {name} <span> {open ? '▲' : '▼'} </span>
         <p style = {{fontSize: '6px'}}>(this is a dropdown menu btw)</p>
       </div>
       <br />
@@ -81,13 +82,13 @@ function Eggs({text}){
   return null;  
 }
 
-function IndexToAPI({ lat, setLat, long, setLong, index, stock, setStock, slug, setSlug, aud }) {
+function IndexToAPI({ lat, setLat, long, setLong, index, city, setCity, slug, setSlug, aud }) {
   //console.log(index);
   if (index === 1){
     return (
       <div>
-        <p>whats the stock symbol?</p>
-        <TextInput text = {stock} setText = {setStock} id = "symbol" aud = {aud} />
+        <p>whats the pokemon?</p>
+        <TextInput text = {city} setText = {setCity} id = "city" aud = {aud} />
       </div>
     )
   }else if(index === 2){
@@ -131,7 +132,7 @@ function App() {
   const [index, setIndex] = useState(0);
   const [lat, setLat] = useState('40.425869');
   const [long, setLong] = useState('-86.908066');
-  const [stock, setStock] = useState('AAPL');
+  const [city, setCity] = useState('dragonite');
   const [slug, setSlug] = useState('will-gavin-newsom-win-the-2028-democratic-presidential-nomination-568');
   const ageNumber = Number(age);
   const hasValidAge = Number.isFinite(ageNumber);
@@ -191,21 +192,20 @@ function App() {
       console.error('u dont got wifi beta', error);
     }
   }
-  async function getStock(signal) {
+  async function getGas(signal) {
     try{
-      const key = import.meta.env.VITE_STOCK_API_KEY;
-      const stock1 = stock;
+      const city1 = city;
       const response = await fetch(
-        `https://finnhub.io/api/v1/quote?symbol=${stock1}&token=${key}`,
-        { signal }
+        `https://pokeapi.co/api/v2/pokemon/${city1}`
       )
       const data = await response.json();
-      //console.log(data);
+      console.log(data);
       apiAudio.play();
-      setMessage(`as a fairy i can tell u the stock price of ${stock} and its currently ${data.c} dollars with a growth of ${data.dp}% since yesterday`);
+      setMessage(`as a fairy i can tell u about ${city} the ${data.types[0].type.name} type and it has the ability ${data.abilities[0].ability.name}; it has ${data.stats[0].base_stat} hp and ${data.stats[1].base_stat} attack`);
     } catch (error) {
       if (error.name === 'AbortError') return;
       console.error('u dont got wifi beta', error);
+      setMessage(`${city} is not a pokemon lil bro`);
     }
   }
   async function getGambling(signal) {
@@ -224,6 +224,7 @@ function App() {
     } catch (error) {
       if (error.name === 'AbortError') return;
       console.error('u dont got wifi beta', error);
+      setMessage(`polymarket is too complicated to work to find ${slug}`);
     }
   }
 
@@ -233,16 +234,16 @@ function App() {
        if (index === 0) {
          getWeather(controller.signal);
        } else if (index === 1) {
-         getStock(controller.signal);
+         getGas(controller.signal);
        } else if (index === 2) {
          getGambling(controller.signal);
        }
-    }, 750);
+    }, 350);
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [lat, long, index, stock, slug]);
+  }, [lat, long, index, city, slug]);
 
   return (
     <div className="flex-container">
@@ -280,7 +281,7 @@ function App() {
         </div>
         <br />
         <DropdownComplex index={index} setIndex={setIndex} id = "apis" />
-        <IndexToAPI lat={lat} setLat={setLat} long={long} setLong={setLong} index={index} stock={stock} setStock={setStock} slug={slug} setSlug={setSlug} aud = {typingAudio} />
+        <IndexToAPI lat={lat} setLat={setLat} long={long} setLong={setLong} index={index} city={city} setCity={setCity} slug={slug} setSlug={setSlug} aud = {typingAudio} />
       </div>
     </div>
   )
