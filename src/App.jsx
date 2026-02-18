@@ -56,6 +56,7 @@ function DropdownComplex({index, setIndex}) {
     <div className = "dropdown">
       <div onClick = {() => setOpen(!open)}>
         i am a fairy of {selectedOption} <span> {open ? '▲' : '▼'} </span>
+        <p style = {{fontSize: '6px'}}>(this is a dropdown menu btw)</p>
       </div>
       <br />
       {open && (
